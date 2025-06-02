@@ -1,0 +1,6 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "clang-format.executable": "C:\\msys64\\usr\\bin\\clang-format.exe",
+    "clang-tidy.executable": "C:\\msys64\\clang64\\bin\\tidy.exe",
+    "editor.formatOnSave": true
+}
