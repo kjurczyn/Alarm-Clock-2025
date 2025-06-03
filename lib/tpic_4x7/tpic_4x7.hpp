@@ -53,13 +53,7 @@ class Display4x7 {
                  ports_pins->seg_pos[6], ports_pins->seg_pos[7]},
         digits_bin_{},
         cur_digit_{} {};
-  /*
-   * @brief Initializes the SPI registers and sets up the pins for the display
-   *
-   * Call this function once to initialize the display before using it.
-   *
-   * @note This function must be called before any other display functions.
-   */
+
   void init();
   void display(const char chars[CHAR_NUM], const bool dots[CHAR_NUM]);
   void update();
