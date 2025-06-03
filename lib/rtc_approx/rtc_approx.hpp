@@ -27,6 +27,20 @@ class RtcApprox {
   char getHoursCharL() const;
   char getHoursCharR() const;
 
+  char* getChars() {
+    static char chars[4];
+    chars[0] = getHoursCharL();
+    chars[1] = getHoursCharR();
+    chars[2] = getMinutesCharL();
+    chars[3] = getMinutesCharR();
+    return chars;
+  }
+
+  void setMinutesR(uint8_t minutes_r);
+  void setMinutesL(uint8_t minutes_l);
+  void setHoursR(uint8_t hours_r);
+  void setHoursL(uint8_t hours_l);
+
  private:
   uint8_t seconds_;
   uint8_t minutes_;

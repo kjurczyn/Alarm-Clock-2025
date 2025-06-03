@@ -33,3 +33,17 @@ char RtcApprox::getMinutesCharR() const { return '0' + (minutes_ % 10); }
 char RtcApprox::getHoursCharL() const { return '0' + (hours_ / 10); }
 
 char RtcApprox::getHoursCharR() const { return '0' + (hours_ % 10); }
+
+void RtcApprox::setMinutesR(uint8_t minutes_r) {
+  minutes_ = minutes_ / 10 + minutes_r;
+}
+
+void RtcApprox::setMinutesL(uint8_t minutes_l) {
+  minutes_ = minutes_l * 10 + minutes_ % 10;
+}
+
+void RtcApprox::setHoursR(uint8_t hours_r) { hours_ = hours_ / 10 + hours_r; }
+
+void RtcApprox::setHoursL(uint8_t hours_l) {
+  hours_ = hours_l * 10 + hours_ % 10;
+}
