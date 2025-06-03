@@ -6,8 +6,9 @@
 Display4x7* display;
 RtcApprox* rtc_approx;
 
-constexpr bool time_dots[4] = {false, true, false,
-                               false};  // Dots for time display
+// TODO: Refactor to use bits
+
+bool time_dots[4] = {false, true, false, false};  // Dots for time display
 
 ISR(TIMER0_OVF_vect) {
   // Change to next digit
@@ -21,6 +22,7 @@ ISR(TIMER1_OVF_vect) {
   char cur_time[4] = {rtc_approx->getHoursCharL(), rtc_approx->getHoursCharR(),
                       rtc_approx->getMinutesCharL(),
                       rtc_approx->getMinutesCharR()};
+  time_dots[1] = !time_dots[1];  // Toggle dot
   display->display(cur_time, time_dots);
   TCNT1 = UINT16_MAX - (F_CPU / 1024);  // Set timer for 1 sec
 }
