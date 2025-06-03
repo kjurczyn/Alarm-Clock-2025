@@ -4,18 +4,18 @@
 
 Display4x7* display;
 
-ISR(TIMER1_OVF_vect) {
+ISR(TIMER0_OVF_vect) {
   // Change to next digit
   display->update();
-  TCNT1 = UINT16_MAX - (F_CPU / 1024 / 1000);  // Set timer for 1ms
+  TCNT0 = UINT8_MAX - (F_CPU / 1024 / 1000);  // Set timer for 1ms
 }
 
 int main() {
   // Timer0 Setup for display refresh
-  TCNT1 = UINT16_MAX - (F_CPU / 1024 / 1000);  // Reset Timer0 counter
-  TCCR1B = (0x1 << CS10) | (0x1 << CS12);      // Prescaler 1024
-  TCCR1A = 0x0;                                // Normal mode - overflow timer
-  TIMSK1 = (0x1 << TOIE1);
+  TCNT0 = UINT8_MAX - (F_CPU / 1024 / 1000);  // Set timer for 1ms
+  TCCR0B = (0x1 << CS10) | (0x1 << CS12);     // Prescaler 1024
+  TCCR0A = 0x0;                               // Normal mode - overflow timer
+  TIMSK0 = (0x1 << TOIE0);
   sei();  // Enable global interrupts
 
   struct PortsPins_Display4x7 ports_pins = {
