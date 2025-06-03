@@ -14,17 +14,23 @@ ISR(TIMER0_OVF_vect) {
   // Change to next digit
   display->update();
   TCNT0 = UINT8_MAX - (F_CPU / 1024 / 1000);  // Set timer for 1ms
+  rtc_approx->update();                       // Update RTC every millisecond
 }
 
 ISR(TIMER1_OVF_vect) {
-  // Update RTC every second
-  rtc_approx->update();
+  // Update clock display every second
   char cur_time[4] = {rtc_approx->getHoursCharL(), rtc_approx->getHoursCharR(),
                       rtc_approx->getMinutesCharL(),
                       rtc_approx->getMinutesCharR()};
   time_dots[1] = !time_dots[1];  // Toggle dot
   display->display(cur_time, time_dots);
   TCNT1 = UINT16_MAX - (F_CPU / 1024);  // Set timer for 1 sec
+}
+
+void delay_ms(uint32_t ms_delay) {
+  uint32_t start = rtc_approx->getMillis();
+  while (rtc_approx->getMillis() - start < ms_delay)
+    ;
 }
 
 int main() {

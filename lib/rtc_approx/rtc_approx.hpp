@@ -11,8 +11,8 @@ class RtcApprox {
   RtcApprox(uint8_t seconds, uint8_t minutes, uint8_t hours)
       : seconds_(seconds), minutes_(minutes), hours_(hours){};
 
-  /* @brief update the RTC time by one second.
-   * This function should be called every second, typically in a timer
+  /* @brief update the RTC time by one millisecond.
+   * This function should be called every millisecond, typically in a timer
    * interrupt.
    */
   void update();
@@ -20,6 +20,7 @@ class RtcApprox {
   uint8_t getSeconds() const;
   uint8_t getMinutes() const;
   uint8_t getHours() const;
+  uint32_t getMillis() const;
 
   char getMinutesCharL() const;
   char getMinutesCharR() const;
@@ -30,6 +31,7 @@ class RtcApprox {
   uint8_t seconds_;
   uint8_t minutes_;
   uint8_t hours_;
+  uint32_t millis_;  // System uptime
 };
 
 #endif
