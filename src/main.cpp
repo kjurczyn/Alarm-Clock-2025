@@ -1,29 +1,38 @@
+
+#include "../lib/tpic_4x7/tpic_4x7.hpp"
 #include "main.hpp"
-#include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+Display4x7* display;
 
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(2, INPUT);
-  pinMode(3, INPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
+ISR(TIMER1_OVF_vect) {
+  // Change to next digit
+  display->update();
+  TCNT1 = UINT16_MAX - (F_CPU / 1024 / 1000);  // Set timer for 1ms
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  delay(100);
-  digitalWrite(LED_BUILTIN, LOW);
-  if(digitalRead(2) == HIGH || digitalRead(3) == HIGH) {
-    digitalWrite(LED_BUILTIN, HIGH);
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
-    
-  }
-}
+int main() {
+  // Timer0 Setup for display refresh
+  TCNT1 = UINT16_MAX - (F_CPU / 1024 / 1000);  // Reset Timer0 counter
+  TCCR1B = (0x1 << CS10) | (0x1 << CS12);      // Prescaler 1024
+  TCCR1A = 0x0;                                // Normal mode - overflow timer
+  TIMSK1 = (0x1 << TOIE1);
+  sei();  // Enable global interrupts
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  struct PortsPins_Display4x7 ports_pins = {
+      .dig_ports = {&PORTB, &PORTB, &PORTD, &PORTD},
+      .dig_ddr_ports = {&DDRB, &DDRB, &DDRD, &DDRD},
+      .dig_pins = {PB1, PB0, PD7, PD5},
+      .rck_port = &PORTB,
+      .rck_ddr_port = &DDRB,
+      .rck_pin = PB2,
+      .seg_pos = {4, 6, 1, 3, 2, 5, 7, 0}};
+
+  display = new Display4x7(&ports_pins);
+  display->init();
+  bool dots[4] = {true, false, true, false};
+  char chars[4] = {'1', '2', '3', '4'};
+  display->display(chars, dots);
+
+  for (;;)
+    ;
 }
