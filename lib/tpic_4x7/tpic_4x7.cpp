@@ -22,6 +22,8 @@ constexpr bool char_8[SEG_LIST_LEN] = {true, true, true, true,
                                        true, true, true};
 constexpr bool char_9[SEG_LIST_LEN] = {true,  true, true, false,
                                        false, true, true};
+constexpr bool char_none[SEG_LIST_LEN] = {false, false, false, false,
+                                          false, false, false};
 
 uint8_t Display4x7::createShrVal_(const bool seg_list[SEG_LIST_LEN], bool dot) {
   uint8_t shr_val = 0x0;
@@ -85,6 +87,8 @@ void Display4x7::display(const char chars[CHAR_NUM],
       case '9':
         digits_bin_[i] = createShrVal_(char_9, dots[i]);
         break;
+      case ' ':
+        digits_bin_[i] = createShrVal_(char_none, dots[i]);
       default:
         break;
     }
