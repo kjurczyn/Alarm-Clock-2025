@@ -1,5 +1,5 @@
 # Alarm Clock Project
-This is the repository for the Microcontroller Systems 2025 homework 2.
+This is the repository for the Microcontroller Systems 2025 homework 2. [Repository link](https://github.com/kjurczyn/Microcontroller-Systems-2025).
 
 ## Description
 The aim of the project is to create an alarm clock integrated with a thermometer. The time and other information is displayed on a 4x7 segment display multiplexed using a shift register at ~100Hz.  
@@ -12,22 +12,22 @@ The source code for the execcutable is in `src/`. This project also includes 3 l
 
 ```
 ALARM_CLOCK
-│   README
-│   platformio.ini    
-│   .gitignore
+|   README
+|   platformio.ini    
+|   .gitignore
 |   .clang-format   
 |
-└───src
-│   │   main.cpp
-│   │   main.h
+ ----src
+|   |   main.cpp
+|   |   main.h
 |
-└───lib
-    │   
-    └───rtc_approx
+ ----lib
+    |   
+     ---rtc_approx
     |   rtc_approx.h
     |   rtc_approx.cpp
-    │
-    └───shr_4x7
+    |
+     ----shr_4x7
     |   shr_4x7.cpp
     |   shr_4x7.hpp
 ```
@@ -49,8 +49,8 @@ ALARM_CLOCK
 | LED | 1 | - |
 | 2SD965 NPN Transistor | 4 | [link](https://www.alldatasheet.com/datasheet-pdf/view/173371/UTC/2SD965AL-Q-AB3-B.html) |
 | LM35 Temperature Sensor | 1 | - |
-| 220Ω Resistor	| 10 | - |
-| 4.7kΩ Resistor | 4 | - |
+| 220 Ohm Resistor	| 10 | - |
+| 4.7k Ohm Resistor | 4 | - |
 | Breadboard Power Supply | 1 | - |
 | 74HC595 Shift Register | 1 | [link](https://www.ti.com/lit/ds/symlink/sn74hc595.pdf)|
 | 420564L 4x7 Digit CC Display | 1 |  [link](https://www.mantech.co.za/datasheets/products/sma420564l.pdf) |
@@ -61,7 +61,7 @@ ALARM_CLOCK
 
 ## Software Model
 The software for the alarm clock was modeled as a state machine. States 3,4,5,6 and 8,9,10,11 each have only one transition triggered by a button press, therefore aren't shown separately.
-![Diagram](/docs/State_diagram.png)
+![Diagram](State_diagram.png)
 
 ## Photo
-![Photo](/docs/Photo.jpg)
+![Photo](Photo.jpg)
