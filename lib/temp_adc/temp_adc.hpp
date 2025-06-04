@@ -5,6 +5,16 @@
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 
-class AdcThermo {};
+class AdcThermo {
+ public:
+  AdcThermo(){};
+  void init();
+  void start();
+  void getTempChars(char* temp_chars);
+  uint8_t getTemp();
+
+ private:
+  uint8_t prev_temp_;
+};
 
 #endif

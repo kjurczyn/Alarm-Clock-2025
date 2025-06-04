@@ -1,10 +1,12 @@
 
 #include "../lib/rtc_approx/rtc_approx.hpp"
 #include "../lib/shr_4x7/shr_4x7.hpp"
+#include "../lib/temp_adc/temp_adc.hpp"
 #include "main.hpp"
 
 Display4x7* display;
 RtcApprox* rtc_approx;
+AdcThermo* adc_thermo;
 
 uint8_t clock_state = 3;
 uint8_t set_value = 0;
@@ -16,6 +18,7 @@ uint8_t right_button_prev_state = 0x0;
 uint32_t prev_right_button_press_time = 0;
 
 constexpr char empty_disp[4] = {' ', ' ', ' ', ' '};
+constexpr bool empty_dots[4] = {0};
 
 bool last_shown = true;
 
@@ -38,17 +41,22 @@ ISR(TIMER1_OVF_vect) {
        clock_state == 6) &&
       !time_dots[1]) {
     cur_time = empty_disp;
+    display->display(cur_time, empty_dots);
+  } else if (clock_state == 2) {
+    char temp[4] = {' ', ' ', ' ', ' '};
+    adc_thermo->getTempChars(temp);
+    display->display(temp, empty_dots);
   } else {
     cur_time = rtc_approx->getChars();
+    display->display(cur_time, time_dots);
   }
 
-  display->display(cur_time, time_dots);
   TCNT1 = UINT16_MAX - (F_CPU / 1024);  // Set timer for 1 sec
 }
 
 ISR(PCINT1_vect) {
   PIND |= (0x1 << PD4);
-  if (PINC & (0x1 << PINC5)) {
+  if (BUTTON_RIGHT_GROUP & (0x1 << BUTTON_RIGHT_PIN)) {
     switch (clock_state) {
       case 1:
         clock_state = 2;
@@ -61,7 +69,7 @@ ISR(PCINT1_vect) {
     }
   }
 
-  if (PINC & (0x1 << PINC4)) {
+  if (BUTTON_LEFT_GROUP & (0x1 << BUTTON_LEFT_PIN)) {
     switch (clock_state) {
       case 1:
         clock_state = 3;
@@ -95,8 +103,8 @@ int main() {
   TIMSK1 = (0x1 << TOIE1);                 // Enable interrupt
 
   // Pin change interrupt setup for buttons
-  PCMSK1 |= (0x1 << PCINT12) |
-            (0x1 << PCINT13);  // Enable pin change interrupts on PB4 and PB5
+  PCMSK1 = (0x1 << PCINT12) |  // Enable pin change interrupts on PB4 and PB5,
+           (0x1 << PCINT13);   // disable on other pins
   PCICR |= (0x1 << PCIE1);     // Enable pin change interrupt group 1
   DDRC &= ~((0x1 << BUTTON_LEFT_PIN) |
             (0x1 << BUTTON_RIGHT_PIN));  // Set input on PC4 and PC5
@@ -108,6 +116,8 @@ int main() {
   PORTD |= (0x1 << PD4);
 
   rtc_approx = new RtcApprox();
+
+  adc_thermo = new AdcThermo();
 
   struct PortsPins_Display4x7 ports_pins = {
       .dig_ports = {&PORTB, &PORTB, &PORTD, &PORTD},
